@@ -1,0 +1,23 @@
+:root {
+    --primary-color: #141413;
+    --secondary-color: #666;
+    --accent-color: #2563eb;
+    --bg-color: #faf9f5;
+    --card-bg: #ffffff;
+    --font-body: 'Noto Sans SC', sans-serif;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-body);
+    background-color: var(--bg-color);
+    color: var(--primary-color);
+    min-height: 100vh;
+}
+
+#root {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+}
