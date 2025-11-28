@@ -483,9 +483,7 @@ const ReportScreen = ({ data, onRestart }) => {
                         <RefreshCw size={20} /> 重新测试
                     </button>
                 </div>
-                <div style={{ marginTop: '10px', fontSize: '0.8rem', color: '#666' }}>
-                    提示：点击上方按钮在新窗口查看报告，可按 Ctrl+S (或 Cmd+S) 保存为 HTML 文件。
-                </div>
+
             </div>
 
             <div className="report-preview">
