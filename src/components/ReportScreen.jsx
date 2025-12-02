@@ -23,6 +23,35 @@ const DOMAIN_NAMES_CN = {
     "Strategic Thinking": "战略思维"
 };
 
+const GRID_LAYOUT = {
+    "Executing": [
+        ["专注", "排难"],
+        ["信仰", "纪律"],
+        ["公平", "统筹"],
+        ["审慎", "责任"],
+        ["成就", null]
+    ],
+    "Influencing": [
+        ["取悦", "统率"],
+        ["完美", "自信"],
+        ["沟通", "行动"],
+        ["竞争", "追求"]
+    ],
+    "Relationship Building": [
+        ["个别", "包容"],
+        ["交往", "和谐"],
+        ["伯乐", "积极"],
+        ["体谅", "适应"],
+        ["关联", null]
+    ],
+    "Strategic Thinking": [
+        ["分析", "思维"],
+        ["前瞻", "战略"],
+        ["回顾", "搜集"],
+        ["学习", "理念"]
+    ]
+};
+
 const ReportScreen = ({ data, onRestart }) => {
     console.log('ReportScreen rendered with data:', data);
 
@@ -325,6 +354,92 @@ const ReportScreen = ({ data, onRestart }) => {
             border-top: 1px solid #eee;
         }
 
+        /* Distribution Grid */
+        .distribution-section {
+            padding: 40px;
+            page-break-inside: avoid;
+        }
+
+        .distribution-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .domain-column {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .domain-header-small {
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+            height: 20px;
+        }
+
+        .theme-subgrid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+        }
+
+        .grid-cell {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 4px;
+            border-radius: 0;
+            background-color: #f0f0f0; /* Default light background */
+            color: #666;
+            position: relative;
+        }
+
+        .grid-cell.highlighted {
+            color: white;
+        }
+        
+        /* Specific light backgrounds for non-highlighted items based on domain */
+        .grid-cell.executing-light { background-color: #eaddf0; color: #5a3e73; }
+        .grid-cell.influencing-light { background-color: #fcebc2; color: #9c6d00; }
+        .grid-cell.relationship-light { background-color: #cce4f5; color: #004a7c; }
+        .grid-cell.strategic-light { background-color: #dbeed9; color: #2e612a; }
+
+        .grid-cell .cell-rank {
+            font-size: 12px;
+            margin-bottom: 4px;
+            opacity: 0.8;
+        }
+
+        .grid-cell.highlighted .cell-rank {
+            font-size: 24px;
+            font-weight: 400;
+            margin-bottom: 2px;
+            opacity: 1;
+        }
+
+        .grid-cell .cell-name {
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 1.2;
+        }
+        
+        .grid-cell.highlighted .cell-name {
+             font-size: 12px;
+        }
+        
+        .domain-bar {
+            height: 4px;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
         @media print {
             body { 
                 max-width: 100%; 
@@ -413,6 +528,58 @@ const ReportScreen = ({ data, onRestart }) => {
                 <div class="subsection-title" style="margin-top: 30px;">发展路径</div>
                 <p style="color: #444; line-height: 1.8;">${data.actionPlan.developmentPlan}</p>
             </div>
+        </div>
+    </div>
+
+    <!-- Distribution Grid Section -->
+    <div class="section distribution-section">
+        <div class="section-header">
+            <h2 class="section-title">您的 CliftonStrengths 在各维度的分布情况</h2>
+            <p style="color: #666; margin-top: 10px;">此图表显示了您特有的 CliftonStrengths 34 个主题才干结果在四大维度中的相对分布。</p>
+        </div>
+
+        <div class="distribution-grid">
+            ${Object.entries(GRID_LAYOUT).map(([domain, rows]) => {
+            const domainColor = DOMAIN_COLORS[domain];
+            const domainNameCN = DOMAIN_NAMES_CN[domain];
+            const domainClass = domain.split(' ')[0].toLowerCase(); // executing, influencing, relationship, strategic
+
+            return `
+                <div class="domain-column">
+                    <div class="domain-header-small">${domainNameCN}</div>
+                    <div class="domain-bar" style="background-color: ${domainColor};"></div>
+                    <div class="theme-subgrid">
+                        ${rows.map(row => {
+                return row.map(themeName => {
+                    if (!themeName) return '<div class="grid-cell" style="background: transparent;"></div>';
+
+                    // Find rank
+                    const rankIndex = data.allThemes.findIndex(t => t.name === themeName);
+                    const rank = rankIndex + 1;
+                    const isTop10 = rank <= 10;
+
+                    let style = '';
+                    let className = 'grid-cell';
+
+                    if (isTop10) {
+                        className += ' highlighted';
+                        style = `background-color: ${domainColor};`;
+                    } else {
+                        className += ` ${domainClass}-light`;
+                    }
+
+                    return `
+                                <div class="${className}" style="${style}">
+                                    <div class="cell-rank">${rank}</div>
+                                    <div class="cell-name">${themeName}</div>
+                                </div>
+                                `;
+                }).join('');
+            }).join('')}
+                    </div>
+                </div>
+                `;
+        }).join('')}
         </div>
     </div>
 

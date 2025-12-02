@@ -38,11 +38,14 @@ class ScoringEngine {
 
                 const involvesOptionA = formula.includes('B');
                 const involvesOptionB = formula.includes('D');
+                const involvesNeutral = formula.includes('C'); // Column C is Neutral
 
                 if (side === 'A' && involvesOptionA) {
                     points = this.convertStrengthToPoints(value);
                 } else if (side === 'B' && involvesOptionB) {
                     points = this.convertStrengthToPoints(value);
+                } else if (side === 'N' && involvesNeutral) {
+                    points = 1; // Neutral is worth 1 point if the formula includes column C
                 }
 
                 if (scores[mapping.theme_name] !== undefined) {
@@ -87,11 +90,14 @@ class ScoringEngine {
                 let points = 0;
                 const involvesOptionA = formula.includes('B');
                 const involvesOptionB = formula.includes('D');
+                const involvesNeutral = formula.includes('C');
 
                 if (side === 'A' && involvesOptionA) {
                     points = this.convertStrengthToPoints(value);
                 } else if (side === 'B' && involvesOptionB) {
                     points = this.convertStrengthToPoints(value);
+                } else if (side === 'N' && involvesNeutral) {
+                    points = 1;
                 }
 
                 if (scores[mapping.theme_name] !== undefined) {
