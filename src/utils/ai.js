@@ -1,6 +1,6 @@
 class AIAnalyzer {
     constructor() {
-        this.apiKey = 'sk-38b067ef538a4e859e2c5839af55985d';
+        this.apiKey = import.meta.env.VITE_DEEPSEEK_API_KEY;
         this.apiEndpoint = 'https://api.deepseek.com/v1/chat/completions';
     }
 
